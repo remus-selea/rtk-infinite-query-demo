@@ -1,0 +1,29 @@
+#root {
+  /* max-width: 1280px; */
+  margin: 0 auto;
+  /* padding: 2rem; */
+  text-align: center;
+}
+
+.row {
+  padding: 0.5em;
+}
+
+header {
+  background-color: #764abc;
+  padding: 2rem;
+  color: white;
+}
+h2 {
+  margin-top: 0;
+}
+
+.pokemon-query-status {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+button {
+  margin: 1rem;
+}
