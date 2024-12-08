@@ -1,8 +1,8 @@
 import { combineSlices, configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
-import { pokemonApi } from "./pokemonApi";
+import { api } from "./api";
 
-const rootReducer = combineSlices(pokemonApi);
+const rootReducer = combineSlices(api);
 
 export type RootState = ReturnType<typeof rootReducer>;
 
@@ -12,7 +12,7 @@ export const makeStore = (preloadedState?: Partial<RootState>) => {
     // Adding the api middleware enables caching, invalidation, polling,
     // and other useful features of `rtk-query`.
     middleware: (getDefaultMiddleware) => {
-      return getDefaultMiddleware().concat(pokemonApi.middleware);
+      return getDefaultMiddleware().concat(api.middleware);
     },
     preloadedState,
   });
