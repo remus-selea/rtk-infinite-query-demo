@@ -3,18 +3,6 @@ import { Link } from "react-router";
 import { api } from "../../app/api";
 
 function Posts() {
-  const result = api.endpoints.getInfinitePosts.useInfiniteQuery(0, {
-    selectFromResult: (result) => {
-      const firstPage = result.data?.pages?.[0];
-      const lastPage = result.data?.pages?.[result.data?.pages?.length - 1];
-      return {
-        ...result,
-        hasPreviousPage: firstPage?.previousId != null,
-        hasNextPage: lastPage?.nextId != null,
-      };
-    },
-  });
-
   const {
     hasPreviousPage,
     hasNextPage,
@@ -26,7 +14,17 @@ function Posts() {
     fetchPreviousPage,
     isFetchingNextPage,
     isFetchingPreviousPage,
-  } = result;
+  } = api.endpoints.getInfinitePosts.useInfiniteQuery(0, {
+    selectFromResult: (result) => {
+      const firstPage = result.data?.pages?.[0];
+      const lastPage = result.data?.pages?.[result.data?.pages?.length - 1];
+      return {
+        ...result,
+        hasPreviousPage: firstPage?.previousId != null,
+        hasNextPage: lastPage?.nextId != null,
+      };
+    },
+  });
 
   const forwardIntObserver = useRef<IntersectionObserver | null>(null);
   const ref = useCallback(
