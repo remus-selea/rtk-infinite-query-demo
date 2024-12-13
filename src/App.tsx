@@ -1,7 +1,7 @@
 import { Link, Route, Routes } from "react-router";
 import "./App.css";
 import About from "./features/About";
-import Posts from "./features/posts/Posts";
+import Projects from "./features/projects/Projects";
 
 function App() {
   return (
@@ -15,7 +15,7 @@ function App() {
       </div>
 
       <Routes>
-        <Route index element={<Posts />} />
+        <Route index element={<Projects />} />
         <Route path="/about" element={<About />} />
         {/* <Route index element={<PokemonInfiniteList />} /> */}
         {/* <Route path="/pokemon" element={<PokemonDetails />} /> */}

@@ -17,35 +17,54 @@ export interface InitialPokemonPageParam {
   limit: number;
 }
 
-export interface Post {
-  name: string;
+type Project = {
   id: number;
+  name: string;
+};
+
+type ProjectsPageCursor = {
+  projects: Project[];
+  after: number | null;
+  before: number | null;
+};
+
+interface ProjectsInitialPageParam {
+  before: number | null;
+  after: number | null;
 }
 
-export interface PostsResponse {
-  data: Post[];
-  previousId: number;
-  nextId: number;
-}
 export const api = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "" }),
   tagTypes: [],
   endpoints: (builder) => ({
-    getPosts: builder.query<PostsResponse, number>({
-      query: (cursor) => ({
-        url: `/posts?cursor=${cursor}`,
-      }),
-    }),
-    getInfinitePosts: builder.infiniteQuery<PostsResponse, number, number>({
+    getProjectsCursor: builder.infiniteQuery<
+      ProjectsPageCursor,
+      void,
+      ProjectsInitialPageParam
+    >({
+      query: ({ before, after }) => {
+        const params = new URLSearchParams();
+        if (after != null) {
+          params.append("after", String(after));
+        } else if (before != null) {
+          params.append("before", String(before));
+        }
+        return {
+          url: `https://example.com/api/projectsCursor?${params.toString()}`,
+        };
+      },
       infiniteQueryOptions: {
-        initialPageParam: 0,
+        initialPageParam: { before: 0, after: 0 },
         getPreviousPageParam: (
           firstPage,
           allPages,
           firstPageParam,
           allPageParams
         ) => {
-          return firstPage.previousId;
+          if (firstPage.before == null) {
+            return undefined;
+          }
+          return { before: firstPage.before, after: null };
         },
         getNextPageParam: (
           lastPage,
@@ -53,12 +72,12 @@ export const api = createApi({
           lastPageParam,
           allPageParams
         ) => {
-          return lastPage.nextId;
+          if (lastPage.after == null) {
+            return undefined;
+          }
+          return { before: null, after: lastPage.after };
         },
       },
-      query: (pageParam) => ({
-        url: `/posts?cursor=${pageParam}`,
-      }),
     }),
     getPokemonByName: builder.query({
       query: (name: string) => `pokemon/${name}`,
